@@ -635,8 +635,13 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
 
 - (CGSize)descriptionSize
 {
+#define DEF_EMPTY_DESCRIPTION_H (6.f)
     CGSize boundedSize = CGSizeMake([self availableWidth], CGFLOAT_MAX);
     CGSize descriptionLabelSize;
+    
+    if (self.descriptionString.length == 0) {
+        return CGSizeMake([self availableWidth], DEF_EMPTY_DESCRIPTION_H);
+    }
     
     if ([[UIDevice currentDevice] isRunningiOS7OrLater])
     {
@@ -655,6 +660,7 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
     }
     
     return CGSizeMake(ceilf(descriptionLabelSize.width), ceilf(descriptionLabelSize.height));
+#undef DEF_EMPTY_DESCRIPTION_H
 }
 
 - (CGRect)statusBarFrame
