@@ -449,9 +449,9 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
 {
 	if (self == [TWMessageView class])
 	{
-        // Fonts
-        kTWMessageViewTitleFont = [UIFont boldSystemFontOfSize:16.0];
-        kTWMessageViewDescriptionFont = [UIFont systemFontOfSize:14.0];
+        // Fonts        
+        kTWMessageViewTitleFont = [UIFont fontWithName:@"AvenirNext-Medium" size:16.0f];
+        kTWMessageViewDescriptionFont = [UIFont fontWithName:@"AvenirNext-Regular" size:14.0f];
         
         // Colors
         kTWMessageViewTitleColor = [UIColor colorWithWhite:1.0 alpha:1.0];
