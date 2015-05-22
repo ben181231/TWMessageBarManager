@@ -665,8 +665,8 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
 
 - (CGRect)statusBarFrame
 {
-    CGRect windowFrame = [self orientFrame:[UIApplication sharedApplication].keyWindow.frame];
-    CGRect statusFrame = [self orientFrame:[UIApplication sharedApplication].statusBarFrame];
+    CGRect windowFrame = [UIApplication sharedApplication].keyWindow.frame;
+    CGRect statusFrame = [UIApplication sharedApplication].statusBarFrame;
     return CGRectMake(windowFrame.origin.x, windowFrame.origin.y, windowFrame.size.width, statusFrame.size.height);
 }
 
@@ -674,7 +674,7 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
 
 - (CGRect)orientFrame:(CGRect)frame
 {
-    if (UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
     {
         frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.width);
     }
