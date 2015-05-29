@@ -665,8 +665,8 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
 
 - (CGRect)statusBarFrame
 {
-    CGRect windowFrame = [UIApplication sharedApplication].keyWindow.frame;
-    CGRect statusFrame = [UIApplication sharedApplication].statusBarFrame;
+    CGRect windowFrame = [self orientFrame:[UIApplication sharedApplication].keyWindow.frame];
+    CGRect statusFrame = [self orientFrame:[UIApplication sharedApplication].statusBarFrame];
     return CGRectMake(windowFrame.origin.x, windowFrame.origin.y, windowFrame.size.width, statusFrame.size.height);
 }
 
@@ -674,7 +674,9 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
 
 - (CGRect)orientFrame:(CGRect)frame
 {
-    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
+    // Manually rotate the frame before iOS 8.0
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation) &&
+        ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedDescending))
     {
         frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.width);
     }
