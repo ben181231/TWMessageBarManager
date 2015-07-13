@@ -16,6 +16,7 @@ CGFloat const kTWMessageBarStyleSheetMessageBarAlpha = 0.96f;
 // Numerics (TWMessageView)
 CGFloat const kTWMessageViewBarPadding = 10.0f;
 CGFloat const kTWMessageViewIconSize = 0.0f;
+CGFloat const kTWMessageViewDismissIconSize = 16.0f;
 CGFloat const kTWMessageViewTextOffset = 2.0f;
 NSUInteger const kTWMessageViewiOS7Identifier = 7;
 
@@ -26,6 +27,7 @@ CGFloat const kTWMessageBarManagerPanVelocity = 0.2f;
 CGFloat const kTWMessageBarManagerPanAnimationDuration = 0.0002f;
 
 // Strings (TWMessageBarStyleSheet)
+NSString * const kTWMessageBarStyleSheetImageIconDismiss = @"icon-dismiss.png";
 NSString * const kTWMessageBarStyleSheetImageIconError = @"icon-error.png";
 NSString * const kTWMessageBarStyleSheetImageIconSuccess = @"icon-success.png";
 NSString * const kTWMessageBarStyleSheetImageIconInfo = @"icon-info.png";
@@ -327,8 +329,16 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
     BOOL itemHit = NO;
     if ([sender isKindOfClass:[UIGestureRecognizer class]])
     {
-        messageView = (TWMessageView *)((UIGestureRecognizer *)sender).view;
-        itemHit = YES;
+        UIGestureRecognizer *gesture = sender;
+        messageView = (TWMessageView *)gesture.view;
+
+        CGPoint location = [gesture locationInView:messageView];
+        CGRect dismissIconRect = CGRectMake(CGRectGetWidth(messageView.bounds) - (kTWMessageViewBarPadding * 2) - kTWMessageViewDismissIconSize,
+                                            messageView.statusBarOffset,
+                                            kTWMessageViewDismissIconSize + (kTWMessageViewBarPadding * 2),
+                                            kTWMessageViewDismissIconSize + (kTWMessageViewBarPadding * 2));
+
+        itemHit = !CGRectContainsPoint(dismissIconRect, location);
     }
     else if ([sender isKindOfClass:[TWMessageView class]])
     {
@@ -535,6 +545,18 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
             }
         }
         CGContextRestoreGState(context);
+
+        // dismiss icon
+        CGContextSaveGState(context);
+        {
+            UIImage *dismissIcon = [UIImage imageNamed:@"icon-dismiss"];
+            [dismissIcon drawInRect:CGRectMake(rect.size.width - kTWMessageViewBarPadding - kTWMessageViewDismissIconSize,
+                                               yOffset,
+                                               kTWMessageViewDismissIconSize,
+                                               kTWMessageViewDismissIconSize)];
+
+        }
+        CGContextRestoreGState(context);
         
         yOffset -= kTWMessageViewTextOffset;
         xOffset += kTWMessageViewIconSize + kTWMessageViewBarPadding;
@@ -606,7 +628,7 @@ static UIColor *kTWDefaultMessageBarStyleSheetInfoStrokeColor = nil;
 
 - (CGFloat)availableWidth
 {
-    return ([self width] - (kTWMessageViewBarPadding * 3) - kTWMessageViewIconSize);
+    return ([self width] - (kTWMessageViewBarPadding * 5) - kTWMessageViewIconSize - kTWMessageViewDismissIconSize);
 }
 
 - (CGSize)titleSize
